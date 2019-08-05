@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ajax Call</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="button">New</div>
+    <div id="quote">New Quote !</div>
+    <script>
+        const btn = document.getElementById("button");
+        var getQuote = document.getElementById("quote");
+        const baseURL = 'https://thatsthespir.it/api';
+
+
+                        //stap 1 maak object aan
+                    var xhr = new XMLHttpRequest();
+
+                //stap 2 open het verzoek
+            xhr.open("GET",baseURL, true);
+
+        //stap 3 maak functie aan
+        xhr.onreadystatechange = function refreshQuote (){
+            //loader als pagina niet volledig geladen is
+            if (this.readyState <= 3) {
+            var output = '<div class="loader"></div>'
+            
+        };
+            if (this.readyState === 4 && this.status == 200){
+            var x = JSON.parse(this.responseText);
+            var output = "";
+
+            if (x.photo == "") {
+                output += 
+                '<div class="quoteBox">' + 
+                '<img class="images" src="images/user.png">' +
+                '<p class="quote-text"><img src="images/quoteL.svg" class="quotemark">' +
+                x.quote + '<img src="images/quoteR.svg" class="quotemark qR"></p>' +
+                '<p class="quote-author">' + "~  " + 
+                x.author + " ("+ x.total_quotes +" quotes) </p>" +
+                '</div>'
+            }   else {
+                output +=
+                    '<div class="quoteBox">' +
+                    '<img class="images" src="' + x.photo + '">' +
+                    '<p class="quote-text"><img src="images/quoteL.svg" class="quotemark">' + x.quote + '<img src="images/quoteR.svg" class="quotemark qR"></p>' +
+                    '<p class="quote-author">' + "~  " + x.author + " ( " + x.total_quotes + " quotes ) </p>" +
+                    '</div>'
+            }
+            
+        };
+        document.getElementById("quote").innerHTML = output;
+    }
+//stap 4 
+xhr.send();
+
+btn.addEventListener("click", () => {
+    refreshQuote()
+});
+
+function refreshQuote() {
+    xhr.open ("GET", baseURL, true);
+    xhr.send();
+}
+    </script>
+
+</body>
+</html>
